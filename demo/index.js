@@ -98,6 +98,7 @@ io.loadImage("demo/uv.jpg").then(image => {
     mag: ctx.Filter.Linear,
     wrap: ctx.Wrap.Repeat,
     encoding: ctx.Encoding.SRGB,
+    flipY: true,
     data: image
   });
   drawCmd.uniforms.uBaseColorMap = uvMap;

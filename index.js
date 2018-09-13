@@ -25,12 +25,12 @@ function createEllipsoid(radius = 1, options) {
       const sinPhi = Math.sin(phi);
       const cosPhi = Math.cos(phi);
 
-      const x = -rx * cosPhi * sinTheta;
+      const x = rx * cosPhi * sinTheta;
       const y = ry * cosTheta;
-      const z = rz * sinPhi * sinTheta;
+      const z = -rz * sinPhi * sinTheta;
 
       vec3.set(tmp, x, y, z);
-      vec3.scale(tmp, tmp, radius);
+      vec3.scale(tmp, tmp, -radius);
       positions.push([...tmp]);
 
       vec3.normalize(tmp, tmp);
