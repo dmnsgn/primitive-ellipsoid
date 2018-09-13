@@ -1,0 +1,41 @@
+{
+  "name": "primitive-ellipsoid",
+  "version": "1.0.0",
+  "description": "An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices (faces).",
+  "main": "index.js",
+  "scripts": {
+    "start": "budo demo/index.js --open --live"
+  },
+  "author": "Damien Seguin (https://dmnsgn.me)",
+  "license": "MIT",
+  "devDependencies": {
+    "budo": "^11.3.2",
+    "pex-cam": "^2.7.1",
+    "pex-context": "^2.6.0",
+    "pex-io": "^2.1.0"
+  },
+  "dependencies": {
+    "gl-matrix": "^2.8.1"
+  },
+  "keywords": [
+    "ellipsoid",
+    "simplicial",
+    "complex",
+    "mesh",
+    "geom",
+    "geometry",
+    "primitive",
+    "stackgl",
+    "glsl",
+    "webgl",
+    "gl"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dmnsgn/primitive-ellipsoid.git"
+  },
+  "homepage": "https://github.com/dmnsgn/primitive-ellipsoid",
+  "bugs": {
+    "url": "https://github.com/dmnsgn/primitive-ellipsoid/issues"
+  }
+}
