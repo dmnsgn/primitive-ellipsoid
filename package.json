@@ -1,18 +1,31 @@
 {
   "name": "primitive-ellipsoid",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices (faces).",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "budo demo/index.js --open --live"
+    "start": "budo demo/index.js --open --live",
+    "build": "NODE_ENV=production ./node_modules/.bin/babel index.js -d dist"
   },
   "author": "Damien Seguin (https://dmnsgn.me)",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-parameters": "^7.9.5",
+    "@babel/preset-env": "^7.9.5",
     "budo": "^11.3.2",
     "pex-cam": "^2.7.1",
     "pex-context": "^2.6.0",
     "pex-io": "^2.1.0"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-parameters"
+    ]
   },
   "dependencies": {
     "gl-matrix": "^2.8.1"
