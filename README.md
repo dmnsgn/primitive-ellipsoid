@@ -51,7 +51,75 @@ console.log(geometry);
 
 <!-- api-start -->
 
-Auto-generated API content.
+## Functions
+
+<dl>
+<dt><a href="#createEllipsoid">createEllipsoid(radius, [options])</a> ⇒ <code><a href="#SimplicialComplex">SimplicialComplex</a></code></dt>
+<dd><p>An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices (faces).</p>
+</dd>
+</dl>
+
+## Typedefs
+
+<dl>
+<dt><a href="#vec3">vec3</a> : <code>Array.&lt;number&gt;</code></dt>
+<dd></dd>
+<dt><a href="#Options">Options</a> : <code>Object</code></dt>
+<dd></dd>
+<dt><a href="#SimplicialComplex">SimplicialComplex</a> : <code>Object</code></dt>
+<dd><p>Geometry definition.</p>
+</dd>
+</dl>
+
+<a name="createEllipsoid"></a>
+
+## createEllipsoid(radius, [options]) ⇒ [<code>SimplicialComplex</code>](#SimplicialComplex)
+
+An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices (faces).
+
+**Kind**: global function  
+**See**: [Wolfram MathWorld Ellipsoid](http://mathworld.wolfram.com/Ellipsoid.html)
+
+| Param     | Type                             | Default         | Description |
+| --------- | -------------------------------- | --------------- | ----------- |
+| radius    | <code>number</code>              | <code>1</code>  | Base radius |
+| [options] | [<code>Options</code>](#Options) | <code>{}</code> |             |
+
+<a name="vec3"></a>
+
+## vec3 : <code>Array.&lt;number&gt;</code>
+
+**Kind**: global typedef  
+<a name="Options"></a>
+
+## Options : <code>Object</code>
+
+**Kind**: global typedef  
+**Properties**
+
+| Name          | Type                | Default         | Description                      |
+| ------------- | ------------------- | --------------- | -------------------------------- |
+| [latSegments] | <code>number</code> | <code>64</code> | Number of latitudinal segments.  |
+| [lngSegments] | <code>number</code> | <code>64</code> | Number of longitudinal segments. |
+| [rx]          | <code>number</code> | <code>2</code>  | Radius in the x direction.       |
+| [ry]          | <code>number</code> | <code>1</code>  | Radius in the y direction.       |
+| [rz]          | <code>number</code> | <code>1</code>  | Radius in the z direction.       |
+
+<a name="SimplicialComplex"></a>
+
+## SimplicialComplex : <code>Object</code>
+
+Geometry definition.
+
+**Kind**: global typedef  
+**Properties**
+
+| Name      | Type                                     |
+| --------- | ---------------------------------------- |
+| positions | [<code>Array.&lt;vec3&gt;</code>](#vec3) |
+| normals   | [<code>Array.&lt;vec3&gt;</code>](#vec3) |
+| uvs       | [<code>Array.&lt;vec3&gt;</code>](#vec3) |
+| cells     | [<code>Array.&lt;vec3&gt;</code>](#vec3) |
 
 <!-- api-end -->
 

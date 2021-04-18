@@ -1,6 +1,6 @@
 {
   "name": "primitive-ellipsoid",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices (faces).",
   "keywords": [
     "ellipsoid",
