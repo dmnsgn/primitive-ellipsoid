@@ -16,11 +16,11 @@ const tmp = [0, 0, 0];
  */
 
 /**
- * @typedef {Object} SimplicialComplex Geometry definition. All optional.
- * @property {vec3} positions
- * @property {vec3} normals
- * @property {vec3} uvs
- * @property {vec3} cells
+ * @typedef {Object} SimplicialComplex Geometry definition.
+ * @property {vec3[]} positions
+ * @property {vec3[]} normals
+ * @property {vec3[]} uvs
+ * @property {vec3[]} cells
  */
 
 /**
