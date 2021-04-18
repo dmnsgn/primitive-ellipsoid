@@ -1,11 +1,40 @@
-const { vec3 } = require("gl-matrix");
+import { vec3 } from "gl-matrix";
 
 const tmp = [0, 0, 0];
 
-function createEllipsoid(radius = 1, options) {
+/**
+ * @typedef {number[]} vec3
+ */
+
+/**
+ * @typedef {Object} Options
+ * @property {number} [latSegments=64] Number of latitudinal segments.
+ * @property {number} [lngSegments=64] Number of longitudinal segments.
+ * @property {number} [rx=2] Radius in the x direction.
+ * @property {number} [ry=1] Radius in the y direction.
+ * @property {number} [rz=1] Radius in the z direction.
+ */
+
+/**
+ * @typedef {Object} SimplicialComplex Geometry definition. All optional.
+ * @property {vec3} positions
+ * @property {vec3} normals
+ * @property {vec3} uvs
+ * @property {vec3} cells
+ */
+
+/**
+ * An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices (faces).
+ *
+ * @param {number} radius Base radius
+ * @param {Options} [options={}]
+ * @returns {SimplicialComplex}
+ * @see [Wolfram MathWorld Ellipsoid]{@link http://mathworld.wolfram.com/Ellipsoid.html}
+ */
+function createEllipsoid(radius = 1, options = {}) {
   // Default to an oblate spheroid
   const { latSegments = 32, lngSegments = 64, rx = 2, ry = 1, rz = 1 } = {
-    ...options
+    ...options,
   };
 
   const cells = [];
@@ -50,12 +79,12 @@ function createEllipsoid(radius = 1, options) {
         cells.push([
           firstIndex + 0,
           firstIndex + 1,
-          firstIndex + lngSegments + 1
+          firstIndex + lngSegments + 1,
         ]);
         cells.push([
           firstIndex + lngSegments + 1,
           firstIndex + 1,
-          firstIndex + lngSegments + 2
+          firstIndex + lngSegments + 2,
         ]);
       }
     }
@@ -65,8 +94,8 @@ function createEllipsoid(radius = 1, options) {
     cells,
     positions,
     normals,
-    uvs
+    uvs,
   };
 }
 
-module.exports = createEllipsoid;
+export default createEllipsoid;

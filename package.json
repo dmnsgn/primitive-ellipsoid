@@ -2,21 +2,6 @@
   "name": "primitive-ellipsoid",
   "version": "1.1.0",
   "description": "An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices (faces).",
-  "main": "index.js",
-  "scripts": {
-    "start": "budo demo/index.js --open --live"
-  },
-  "author": "Damien Seguin (https://dmnsgn.me)",
-  "license": "MIT",
-  "devDependencies": {
-    "budo": "^11.3.2",
-    "pex-cam": "^2.7.1",
-    "pex-context": "^2.6.0",
-    "pex-io": "^2.1.0"
-  },
-  "dependencies": {
-    "gl-matrix": "^2.8.1"
-  },
   "keywords": [
     "ellipsoid",
     "simplicial",
@@ -30,12 +15,39 @@
     "webgl",
     "gl"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/dmnsgn/primitive-ellipsoid.git"
-  },
   "homepage": "https://github.com/dmnsgn/primitive-ellipsoid",
-  "bugs": {
-    "url": "https://github.com/dmnsgn/primitive-ellipsoid/issues"
+  "bugs": "https://github.com/dmnsgn/primitive-ellipsoid/issues",
+  "repository": "dmnsgn/primitive-ellipsoid",
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://paypal.me/dmnsgn"
+    },
+    {
+      "type": "individual",
+      "url": "https://commerce.coinbase.com/checkout/56cbdf28-e323-48d8-9c98-7019e72c97f3"
+    }
+  ],
+  "license": "MIT",
+  "author": "Damien Seguin (https://github.com/dmnsgn)",
+  "sideEffects": true,
+  "type": "module",
+  "main": "index.js",
+  "types": "types/index.d.ts",
+  "dependencies": {
+    "gl-matrix": "^3.3.0"
+  },
+  "devDependencies": {
+    "assert": "^2.0.0",
+    "core-js": "^3.10.1",
+    "dat.gui": "^0.7.7",
+    "es-module-shims": "^0.10.4",
+    "pex-cam": "^2.8.0",
+    "pex-context": "^2.10.4",
+    "pex-io": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=15.0.0",
+    "npm": ">=7.0.0"
   }
 }

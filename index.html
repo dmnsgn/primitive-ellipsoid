@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>
+      primitive-ellipsoid by Damien Seguin (https://github.com/dmnsgn)
+    </title>
+    <style>
+      :root {
+        --color-dark: #404040;
+        --color-light: #f2f2f2;
+        --color-accent: #fd5e62;
+      }
+
+      body {
+        margin: 0;
+        overscroll-behavior: none;
+        font-family: sans-serif;
+        color: var(--color-light);
+        background-color: var(--color-dark);
+      }
+
+      main {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      h1 {
+        position: absolute;
+        top: 0;
+        left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>primitive-ellipsoid</h1>
+    </main>
+    <script async src="web_modules/es-module-shims.js" type="module"></script>
+    <script src="web_modules/import-map.json" type="importmap"></script>
+
+    <script type="module">
+      import createEllipsoid from "./index.js";
+
+      import { mat4 } from "gl-matrix";
+      import io from "pex-io";
+      import createContext from "pex-context";
+      import pexCam from "pex-cam";
+      import { orbiter as createOrbiter } from "pex-cam";
+      import dat from "dat.gui";
+
+      const { perspective: createCamera } = pexCam;
+
+      const gui = new dat.GUI();
+      const modeOptions = ["texture", "normal", "uv"];
+      const CONFIG = {
+        mode: "texture",
+      };
+      gui.add(CONFIG, "mode", modeOptions);
+
+      // Geometry
+      const sphereOptions = { rx: 1, ry: 1, rz: 1 };
+      const geometry = createEllipsoid(1, {
+        // ...sphereOptions
+      });
+
+      // Render
+      const ctx = createContext();
+      const camera = createCamera({
+        fov: Math.PI / 3,
+        aspect: ctx.gl.drawingBufferWidth / ctx.gl.drawingBufferHeight,
+        near: 0.1,
+        far: 100,
+        position: [0, 0, 3],
+      });
+      createOrbiter({ camera });
+
+      const vert = /* glsl */ `
+attribute vec3 aPosition;
+attribute vec3 aNormal;
+attribute vec2 aTexCoord0;
+
+uniform mat4 uProjectionMatrix;
+uniform mat4 uViewMatrix;
+uniform mat4 uModelMatrix;
+
+varying vec3 vNormal;
+varying vec2 vTexCoord0;
+
+void main() {
+  vNormal = aNormal;
+  vTexCoord0 = aTexCoord0;
+  mat4 modelViewMatrix = uViewMatrix * uModelMatrix;
+  gl_Position = uProjectionMatrix * modelViewMatrix * vec4(aPosition, 1.0);
+}
+`;
+
+      const frag = /* glsl */ `
+precision highp float;
+
+varying vec3 vNormal;
+varying vec2 vTexCoord0;
+
+uniform sampler2D uBaseColorMap;
+uniform float uMode;
+
+void main() {
+  vec4 texelColor = texture2D(uBaseColorMap, vTexCoord0);
+
+  if (uMode == 0.0) gl_FragColor = texture2D(uBaseColorMap, vTexCoord0);
+  if (uMode == 1.0) gl_FragColor = vec4(vNormal.xyz * 0.5 + 0.5, 1.0);
+  if (uMode == 2.0) gl_FragColor = vec4(vTexCoord0.xy, 0.0, 1.0);
+}
+`;
+
+      const drawCmd = {
+        pipeline: ctx.pipeline({
+          vert,
+          frag,
+          depthTest: true,
+          primitive: ctx.Primitive.Triangles,
+        }),
+        attributes: {
+          aPosition: ctx.vertexBuffer(geometry.positions),
+          aNormal: ctx.vertexBuffer(geometry.normals),
+          aTexCoord0: ctx.vertexBuffer(geometry.uvs),
+        },
+        indices: ctx.indexBuffer(geometry.cells),
+        uniforms: {
+          uProjectionMatrix: camera.projectionMatrix,
+          uViewMatrix: camera.viewMatrix,
+          uModelMatrix: mat4.create(),
+          uBaseColorMap: null,
+        },
+      };
+
+      const clearCmd = {
+        pass: ctx.pass({
+          clearColor: [0.05, 0.05, 0.05, 1],
+        }),
+      };
+
+      io.loadImage("examples/uv.jpg").then((image) => {
+        const uvMap = ctx.texture2D({
+          width: 1024,
+          height: 1024,
+          pixelFormat: ctx.PixelFormat.RGBA8,
+          encoding: ctx.Encoding.Linear,
+          min: ctx.Filter.Linear,
+          mag: ctx.Filter.Linear,
+          wrap: ctx.Wrap.Repeat,
+          encoding: ctx.Encoding.SRGB,
+          flipY: true,
+          data: image,
+        });
+        drawCmd.uniforms.uBaseColorMap = uvMap;
+
+        ctx.frame(() => {
+          ctx.submit(clearCmd);
+          ctx.submit(drawCmd, {
+            uniforms: { uMode: modeOptions.indexOf(CONFIG.mode) },
+          });
+        });
+
+        const onResize = () => {
+          ctx.gl.canvas.width = window.innerWidth;
+          ctx.gl.canvas.height = window.innerHeight;
+          camera.set({
+            aspect: ctx.gl.canvas.width / ctx.gl.canvas.height,
+          });
+        };
+        onResize();
+        window.addEventListener("resize", onResize);
+      });
+    </script>
+  </body>
+</html>
