@@ -2,11 +2,11 @@
   "imports": {
     "assert": "./assert.js",
     "core-js": "./core-js.js",
-    "dat.gui": "./dat.gui.js",
     "es-module-shims": "./es-module-shims.js",
     "gl-matrix": "./gl-matrix.js",
     "pex-cam": "./pex-cam.js",
     "pex-context": "./pex-context.js",
-    "pex-io": "./pex-io.js"
+    "pex-io": "./pex-io.js",
+    "tweakpane": "./tweakpane.js"
   }
 }

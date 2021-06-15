@@ -49,22 +49,25 @@
       import createContext from "pex-context";
       import pexCam from "pex-cam";
       import { orbiter as createOrbiter } from "pex-cam";
-      import dat from "dat.gui";
+      import { Pane } from "tweakpane";
 
       const { perspective: createCamera } = pexCam;
 
-      const gui = new dat.GUI();
-      const modeOptions = ["texture", "normal", "uv"];
+      const modeOptions = ["texture", "normal", "flat-shaded", "uv"];
       const CONFIG = {
         mode: "texture",
       };
-      gui.add(CONFIG, "mode", modeOptions);
+
+      const pane = new Pane();
+      pane.addInput(CONFIG, "mode", {
+        options: modeOptions.map((value) => ({
+          text: value.toUpperCase(),
+          value,
+        })),
+      });
 
       // Geometry
-      const sphereOptions = { rx: 1, ry: 1, rz: 1 };
-      const geometry = createEllipsoid(1, {
-        // ...sphereOptions
-      });
+      const geometry = createEllipsoid(0.5);
 
       // Render
       const ctx = createContext();
@@ -77,55 +80,122 @@
       });
       createOrbiter({ camera });
 
-      const vert = /* glsl */ `
+      const drawLines = {
+        pipeline: ctx.pipeline({
+          vert: /* glsl */ `
 attribute vec3 aPosition;
-attribute vec3 aNormal;
-attribute vec2 aTexCoord0;
+attribute vec4 aColor;
 
 uniform mat4 uProjectionMatrix;
 uniform mat4 uViewMatrix;
 uniform mat4 uModelMatrix;
 
+varying vec4 vColor;
+
+void main () {
+  vColor = aColor;
+  vec3 position = aPosition;
+  gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(position, 1.0);
+}`,
+          frag: /* glsl */ `
+precision highp float;
+
+varying vec4 vColor;
+
+void main () {
+  gl_FragColor = vColor;
+}`,
+          depthTest: true,
+          primitive: ctx.Primitive.Lines,
+        }),
+        attributes: {
+          aPosition: ctx.vertexBuffer([
+            [0, 0, 0],
+            [1, 0, 0],
+            [0, 0, 0],
+            [0, 1, 0],
+            [0, 0, 0],
+            [0, 0, 1],
+          ]),
+          aColor: ctx.vertexBuffer([
+            [1, 0, 0, 1],
+            [1, 0.5, 0.5, 1],
+            [0, 1, 0, 1],
+            [0.5, 1, 0.5, 1],
+            [0, 0, 1, 1],
+            [0.5, 0.5, 1, 1],
+          ]),
+        },
+        indices: ctx.indexBuffer([
+          [0, 1],
+          [2, 3],
+          [4, 5],
+        ]),
+        uniforms: {
+          uProjectionMatrix: null,
+          uViewMatrix: null,
+          uModelMatrix: mat4.create(),
+        },
+      };
+
+      const drawCmd = {
+        pipeline: ctx.pipeline({
+          vert: /* glsl */ `
+attribute vec3 aPosition;
+attribute vec3 aNormal;
+attribute vec2 aUv;
+
+uniform mat4 uProjectionMatrix;
+uniform mat4 uModelMatrix;
+uniform mat4 uViewMatrix;
+uniform mat4 uInverseViewMatrix;
+
+varying vec3 vPositionWorld;
+varying vec3 vPositionView;
 varying vec3 vNormal;
-varying vec2 vTexCoord0;
+varying vec2 vUv;
 
 void main() {
   vNormal = aNormal;
-  vTexCoord0 = aTexCoord0;
-  mat4 modelViewMatrix = uViewMatrix * uModelMatrix;
-  gl_Position = uProjectionMatrix * modelViewMatrix * vec4(aPosition, 1.0);
-}
-`;
+  vUv = aUv;
 
-      const frag = /* glsl */ `
+  vPositionWorld = (uModelMatrix * vec4(aPosition, 1.0)).xyz;
+  vPositionView = (uViewMatrix * vec4(vPositionWorld, 1.0)).xyz;
+
+  gl_Position = uProjectionMatrix * vec4(vPositionView, 1.0);
+}
+`,
+          frag: /* glsl */ `
+#extension GL_OES_standard_derivatives : enable
 precision highp float;
 
 varying vec3 vNormal;
-varying vec2 vTexCoord0;
+varying vec2 vUv;
 
 uniform sampler2D uBaseColorMap;
 uniform float uMode;
 
+varying vec3 vPositionWorld;
+
 void main() {
-  vec4 texelColor = texture2D(uBaseColorMap, vTexCoord0);
-
-  if (uMode == 0.0) gl_FragColor = texture2D(uBaseColorMap, vTexCoord0);
-  if (uMode == 1.0) gl_FragColor = vec4(vNormal.xyz * 0.5 + 0.5, 1.0);
-  if (uMode == 2.0) gl_FragColor = vec4(vTexCoord0.xy, 0.0, 1.0);
+  if (uMode == 0.0) gl_FragColor = texture2D(uBaseColorMap, vUv);
+  if (uMode == 1.0) gl_FragColor = vec4(vNormal * 0.5 + 0.5, 1.0);
+  if (uMode == 2.0) {
+    vec3 fdx = vec3(dFdx(vPositionWorld.x), dFdx(vPositionWorld.y), dFdx(vPositionWorld.z));
+    vec3 fdy = vec3(dFdy(vPositionWorld.x), dFdy(vPositionWorld.y), dFdy(vPositionWorld.z));
+    vec3 normal = normalize(cross(fdx, fdy));
+    gl_FragColor = vec4(normal * 0.5 + 0.5, 1.0);
+  }
+  if (uMode == 3.0) gl_FragColor = vec4(vUv.xy, 0.0, 1.0);
 }
-`;
-
-      const drawCmd = {
-        pipeline: ctx.pipeline({
-          vert,
-          frag,
+`,
           depthTest: true,
           primitive: ctx.Primitive.Triangles,
         }),
         attributes: {
           aPosition: ctx.vertexBuffer(geometry.positions),
           aNormal: ctx.vertexBuffer(geometry.normals),
-          aTexCoord0: ctx.vertexBuffer(geometry.uvs),
+          aUv: ctx.vertexBuffer(geometry.uvs),
         },
         indices: ctx.indexBuffer(geometry.cells),
         uniforms: {
@@ -159,6 +229,12 @@ void main() {
 
         ctx.frame(() => {
           ctx.submit(clearCmd);
+
+          drawLines.uniforms.uProjectionMatrix = camera.projectionMatrix;
+          drawLines.uniforms.uViewMatrix = camera.viewMatrix;
+
+          ctx.submit(drawLines);
+
           ctx.submit(drawCmd, {
             uniforms: { uMode: modeOptions.indexOf(CONFIG.mode) },
           });
