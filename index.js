@@ -33,7 +33,13 @@ const tmp = [0, 0, 0];
  */
 function createEllipsoid(radius = 1, options = {}) {
   // Default to an oblate spheroid
-  const { latSegments = 32, lngSegments = 64, rx = 2, ry = 1, rz = 1 } = {
+  const {
+    latSegments = 32,
+    lngSegments = 64,
+    rx = 2,
+    ry = 1,
+    rz = 1,
+  } = {
     ...options,
   };
 
