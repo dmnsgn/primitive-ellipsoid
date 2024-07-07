@@ -1,12 +1,12 @@
 {
   "imports": {
-    "assert": "./assert.js",
-    "core-js": "./core-js.js",
+    "async-preloader": "./async-preloader.js",
+    "cameras": "./cameras.js",
     "es-module-shims": "./es-module-shims.js",
+    "es-module-shims/debug": "./es-module-shims/debug.js",
+    "es-module-shims/wasm": "./es-module-shims/wasm.js",
     "gl-matrix": "./gl-matrix.js",
-    "pex-cam": "./pex-cam.js",
     "pex-context": "./pex-context.js",
-    "pex-io": "./pex-io.js",
     "tweakpane": "./tweakpane.js"
   }
 }
