@@ -64,9 +64,9 @@ console.log(geometry);
 <dl>
 <dt><a href="#vec3">vec3</a> : <code>Array.&lt;number&gt;</code></dt>
 <dd></dd>
-<dt><a href="#Options">Options</a> : <code>Object</code></dt>
+<dt><a href="#Options">Options</a> : <code>object</code></dt>
 <dd></dd>
-<dt><a href="#SimplicialComplex">SimplicialComplex</a> : <code>Object</code></dt>
+<dt><a href="#SimplicialComplex">SimplicialComplex</a> : <code>object</code></dt>
 <dd><p>Geometry definition.</p>
 </dd>
 </dl>
@@ -77,7 +77,7 @@ console.log(geometry);
 
 An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices (faces).
 
-**Kind**: global function  
+**Kind**: global function
 **See**: [Wolfram MathWorld Ellipsoid](http://mathworld.wolfram.com/Ellipsoid.html)
 
 | Param     | Type                             | Default         | Description |
@@ -89,12 +89,12 @@ An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices 
 
 ## vec3 : <code>Array.&lt;number&gt;</code>
 
-**Kind**: global typedef  
+**Kind**: global typedef
 <a name="Options"></a>
 
-## Options : <code>Object</code>
+## Options : <code>object</code>
 
-**Kind**: global typedef  
+**Kind**: global typedef
 **Properties**
 
 | Name          | Type                | Default         | Description                      |
@@ -107,11 +107,11 @@ An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices 
 
 <a name="SimplicialComplex"></a>
 
-## SimplicialComplex : <code>Object</code>
+## SimplicialComplex : <code>object</code>
 
 Geometry definition.
 
-**Kind**: global typedef  
+**Kind**: global typedef
 **Properties**
 
 | Name      | Type                                     |

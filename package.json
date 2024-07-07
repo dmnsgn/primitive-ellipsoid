@@ -1,6 +1,6 @@
 {
   "name": "primitive-ellipsoid",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "An ellipsoid geometry for 3D rendering, including normals, UVs and cell indices (faces).",
   "keywords": [
     "ellipsoid",
@@ -17,7 +17,10 @@
   ],
   "homepage": "https://github.com/dmnsgn/primitive-ellipsoid",
   "bugs": "https://github.com/dmnsgn/primitive-ellipsoid/issues",
-  "repository": "dmnsgn/primitive-ellipsoid",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmnsgn/primitive-ellipsoid.git"
+  },
   "funding": [
     {
       "type": "individual",
