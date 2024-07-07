@@ -7,7 +7,7 @@ const tmp = [0, 0, 0];
  */
 
 /**
- * @typedef {Object} Options
+ * @typedef {object} Options
  * @property {number} [latSegments=64] Number of latitudinal segments.
  * @property {number} [lngSegments=64] Number of longitudinal segments.
  * @property {number} [rx=2] Radius in the x direction.
@@ -16,7 +16,7 @@ const tmp = [0, 0, 0];
  */
 
 /**
- * @typedef {Object} SimplicialComplex Geometry definition.
+ * @typedef {object} SimplicialComplex Geometry definition.
  * @property {vec3[]} positions
  * @property {vec3[]} normals
  * @property {vec3[]} uvs
